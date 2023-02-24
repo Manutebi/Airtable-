@@ -10,16 +10,20 @@ api_key = 'keykY5YjFxN23izT6'
 
 airtable = Airtable(base_key, table_name, api_key)
 
-# Obtener todos los registros de la tabla
+# Obtiene los registros de Airtable
 records = airtable.get_all()
-df = pd.DataFrame.from_records([record['fields'] for record in records])
 
+# Convierte los registros a un DataFrame de Pandas
+df = pd.DataFrame.from_records((r['fields'] for r in records))
+
+# Muestra los primeros 5 registros
+print(df.head())
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html', data=df.to_html(classes = 'my_class" id = "my_id'))
+    return render_template('index.html', data=df.to_dict('records'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
