@@ -5,7 +5,7 @@ import pandas as pd
 
 # Configurar la conexión a la base de datos de Airtable
 base_key = 'appTsErgl1kPnkWgl'
-table_name = 'Contacts'
+table_name = 'Opportunities'
 api_key = 'keykY5YjFxN23izT6'
 
 airtable = Airtable(base_key, table_name, api_key)
