@@ -19,13 +19,20 @@
 
 
 
+<style>
+    .seleccionada {
+  background-color: #00c8ff !important;
+}
+</style>
+
+
 </head>
 <body  class="container-fluid p-5">
 
-    <button id="clearFilters">Borrar filtros</button>
+    <button id="borrarFiltros">Borrar filtros</button>
 
 <div class="table-responsive" id="example-container">
-    <table class="records_list table table-striped table-bordered table-hover"  id="example">
+    <table class="records_list table table-striped table-bordered table-hover" style="width: 100%;"  id="example">
         <thead>
             <tr>
                 {% for key in data[0].keys() %}
@@ -36,7 +43,7 @@
         </thead>
         <tbody>
             {% for item in data %}
-            <tr>
+            <tr class="fila">
                 {% for value in item.values() %}
                 <td>{{ value }}</td>
                 {% endfor %}
@@ -58,49 +65,63 @@
 
 $(document).ready(function() {
   // Inicializar DataTables
-  var table = $('#example').DataTable({
-    
+  var settings = {
     "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
-    "responsive": true,
+    "responsive": false,
     "language": {
       "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      
-      
     },
-
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-    
     "order": [
       [0, "desc"]
-    ], 
-    "initComplete": function () {
-      this.api().columns().every(function () {
-          var that = this;
-      });
-    }
-  })
+    ]
+  }
 
+  // Inicializar DataTable
+  var table = $('#example').DataTable(settings);
   
+  $('#example thead tr').clone(true).appendTo('#example thead');
   
+  $('#example thead tr:eq(1) th').each(function (i) {
+     var title = $(this).text();
+     $(this).html('<input type="text" placeholder="Buscar...'+title+'" />');
   
-  
+     $( 'input', this ).on( 'keyup change', function () {
+        if ( table.column(i).search() !== this.value ) {
+            table
+                .column(i)
+                .search( this.value )
+                .draw();
+        }
+     });
+  });
 
   // Filtrar la tabla cuando se hace clic en cualquier celda
   $('#example').on('click', 'td', function() {
     table.search($(this).text()).draw();
+    
   });
 
   // Borrar todos los filtros cuando se hace clic en el botón
-  $('#clearFilters').on('click', function() {
+  $('#borrarFiltros').on('click', function() {
     table.search('').draw();
   });
+
+    // Selecciona el elemento de entrada de texto con el atributo "placeholder"
+    var inputElement = $('input[placeholder]');
+
+    // Establecer el tamaño del placeholder utilizando el método css()
+    inputElement.css('width', '100%');
 });
 
+$('.fila').click(function() {
+  // Remueve la clase 'seleccionada' de todas las filas
+  $('.fila').removeClass('seleccionada');
 
-    
-
-
-
+  // Agrega la clase 'seleccionada' a la fila que fue clickeada
+  $(this).addClass('seleccionada');
+  
+});
 
 
 
@@ -108,8 +129,6 @@ $(document).ready(function() {
 
 </script>
 
-
-
-
 </body>
 </html>
+
