@@ -42,7 +42,7 @@
     <button id="borrarFiltros">Borrar filtros</button>
 
 <div class="table-responsive" id="example-container">
-    <table class="records_list table table-striped table-bordered table-hover" style="width: 100%;"  id="example">
+    <table class="records_list table table-striped table-bordered table-hover table-dark" style="width: 100%;"  id="example">
         <thead>
             <tr>
                 {% for key in data[0].keys() %}
@@ -97,7 +97,7 @@
 $(document).ready(function() {
   // Inicializar DataTables
 
-  //Mostrar filtros desplegables en el footer 
+  //Mostrar filtros desplegables en el header 
   $('#example').DataTable({
         initComplete: function () {
             this.api()
@@ -105,7 +105,7 @@ $(document).ready(function() {
                 .every(function () {
                     var column = this;
                     var select = $('<select><option value=""></option></select>')
-                        .appendTo($(column.footer()).empty())
+                        .appendTo($(column.header()))
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
  
@@ -145,7 +145,7 @@ $(document).ready(function() {
   
   $('#example thead tr:eq(1) th').each(function (i) {
      var title = $(this).text();
-     $(this).html('<input type="text" placeholder="Buscar...'+title+'" />');
+     $(this).html('<input type="text" placeholder="Buscar" />');
   
      $( 'input', this ).on( 'keyup change', function () {
         if ( table.column(i).search() !== this.value ) {
